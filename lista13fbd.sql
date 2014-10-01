@@ -196,6 +196,21 @@ from empregado e,
 	where e.cpf = d.gerente) tab2
 where e.chefe = tab1.cpf and e.cdep = tab2.codigo
 
+--13. Listar nome dos departamentos com média salarial maior que a média salarial da
+--empresa.
+
+select dnome
+from departamento, 
+	(
+	select cdep
+	from empregado
+	group by cdep
+	having avg(cast(salario as numeric)) >= (
+						select avg(cast(salario as numeric))
+						from empregado )
+	) tab1
+where codigo = tab1.cdep
+
 --15. Listar os empregados lotados nos departamentos localizados em “Fortaleza”.
 
 select e.enome
