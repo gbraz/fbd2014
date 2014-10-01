@@ -6,7 +6,7 @@
 
 select d.dnome
 from departamento d, (
-			select cdep, AVG(salario) as media_salario
+			select cdep, AVG(cast(salario as numeric)) as media_salario
 			from empregado
 			group by cdep
 			) tab1
@@ -80,3 +80,54 @@ from departamento d,
 	) tab4
 where d.codigo = tab1.codigo and d.codigo = tab2.cdep and
 d.codigo = tab3.cdep and d.codigo = tab4.dcodigo
+
+--4. Recuperar o nome do projeto que consome o maior número de horas.
+
+select p.pnome
+from projeto p, tarefa t
+where p.pcodigo = t.pcodigo
+group by p.pnome
+having sum(t.horas) >= ALL( select sum(t.horas)as qtd_horas
+from projeto p, tarefa t
+where p.pcodigo = t.pcodigo
+group by p.pnome)
+
+--5. Recuperar o nome do projeto mais caro. (Corrigir: Fazer pelo cpf dado pra tarefa)
+
+select p.pnome
+from projeto p, empregado e
+where p.cdep = e.cdep
+group by p.pnome
+having sum(e.salario) >= ALL( select sum(e.salario)
+from projeto p, empregado e
+where p.cdep = e.cdep
+group by p.pnome
+)
+
+--6. Recuperar para cada projeto: o seu nome, o nome gerente do departamento que
+--controla o projeto, a quantidade total de horas alocadas ao projeto, a quantidade de
+--empregados alocados ao projeto e o custo mensal do projeto.
+
+select p.pnome, e.enome, tab1.qtd_empregado, tab2.salario
+from projeto p, empregado e, departamento d, 
+	(
+	select cdep, count(e.cdep) as qtd_empregado
+	from empregado e
+	group by cdep ) tab1,
+	(
+	select p.pnome, sum(e.salario) as salario
+	from projeto p, empregado e
+	where p.cdep = e.cdep
+	group by p.pnome ) tab2
+where p.cdep = d.codigo and d.gerente = e.cpf and tab1.cdep = d.codigo 
+	and tab2.pnome = p.pnome
+group by p.pnome, e.enome, tab1.qtd_empregado, tab2.salario
+
+--7. Recuperar o nome dos gerentes com sobrenome ‘Silva’.
+
+select e.enome
+from empregado e, departamento d
+where e.cpf = d.gerente and e.enome like '% Silva%'
+
+--8. Recupere o nome dos gerentes que estão alocados em algum projeto (ou seja,
+--possuem “alguma” tarefa em “algum” projeto).
