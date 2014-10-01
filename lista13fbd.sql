@@ -211,6 +211,17 @@ from departamento,
 	) tab1
 where codigo = tab1.cdep
 
+--14. Listar todos os empregados que possuem salário maior que a média salarial de
+--seus departamentos.
+
+select e.enome, e.cpf, e.endereco, e.nasc, e.sexo, e.salario, e.chefe, e.cdep
+from empregado e,
+	(
+	select cdep, avg(cast(salario as numeric)) as med_salario
+	from empregado
+	group by cdep ) tab1
+where e.cdep = tab1.cdep and cast(e.salario as numeric) >= cast(tab1.med_salario as numeric)
+
 --15. Listar os empregados lotados nos departamentos localizados em “Fortaleza”.
 
 select e.enome
