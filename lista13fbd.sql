@@ -143,3 +143,17 @@ from empregado e,
 	select gerente
 	from departamento) tab1
 where e.cpf = tab1.cpf
+
+--9. Recuperar o nome dos empregados que participam de projetos que não são
+--gerenciados pelo seu departamento.
+
+select e.enome
+from empregado e, 
+	(
+	select t.cpf, p.cdep
+	from tarefa t, projeto p, 
+		(
+		select cpf, cdep
+		from empregado) tab1
+	where t.pcodigo = p.pcodigo and tab1.cpf = t.cpf and tab1.cdep <> p.cdep) tab2
+where e.cpf = tab2.cpf
