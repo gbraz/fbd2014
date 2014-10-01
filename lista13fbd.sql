@@ -228,9 +228,27 @@ select e.enome
 from empregado e, departamento d, dunidade u
 where e.cdep = d.codigo and d.codigo = u.dcodigo and u.dcidade = 'Fortaleza'
 
+--16. Listar nome de departamentos com empregados ganhando duas vezes mais que a
+--média do departamento.
+
+select dnome 
+from departamento,
+	(
+	select e.cdep
+	from empregado e,
+		(
+		select cdep, avg(cast(salario as numeric)) as med_salario
+		from empregado
+		group by cdep ) tab1
+	where e.cdep = tab1.cdep and cast(e.salario as numeric) >= 2*cast(tab1.med_salario as numeric) ) tab1
+where codigo = tab1.cdep
+
 --17. Recuperar o nome dos empregados com salário entre R$ 700 e R$ 2800.
 
 select enome
 from empregado
 group by enome, salario
 having cast(salario as numeric) between 700 and 2800
+
+--18. Recuperar o nome dos departamentos que controlam projetos com mais de 50
+--empregados e que também controlam projetos com menos de 5 empregados.
