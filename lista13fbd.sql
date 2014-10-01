@@ -176,6 +176,12 @@ where e.cpf = tab1.cpf
 --do seu departamento. O resultado deve estar em ordem decrescente de salário.
 --Mostrar os empregados sem departamento e os departamentos sem empregados.
 
+select enome, salario, dnome as departamento
+from empregado
+full outer join departamento
+on empregado.cdep = departamento.codigo
+order by salario desc
+
 --12. Recuperar para cada funcionário (empregado): o seu nome, o nome do seu chefe e
 --o nome do gerente do seu departamento.
 
