@@ -176,6 +176,20 @@ where e.cpf = tab1.cpf
 --do seu departamento. O resultado deve estar em ordem decrescente de salário.
 --Mostrar os empregados sem departamento e os departamentos sem empregados.
 
+--12. Recuperar para cada funcionário (empregado): o seu nome, o nome do seu chefe e
+--o nome do gerente do seu departamento.
+
+select e.enome as funcionario, tab1.enome as chefe, tab2.enome as gerente
+from empregado e,
+	(
+	select enome, cpf
+	from empregado) tab1,
+	(
+	select e.enome, d.codigo
+	from empregado e, departamento d
+	where e.cpf = d.gerente) tab2
+where e.chefe = tab1.cpf and e.cdep = tab2.codigo
+
 --15. Listar os empregados lotados nos departamentos localizados em “Fortaleza”.
 
 select e.enome
