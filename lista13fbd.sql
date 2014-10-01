@@ -176,6 +176,12 @@ where e.cpf = tab1.cpf
 --do seu departamento. O resultado deve estar em ordem decrescente de salário.
 --Mostrar os empregados sem departamento e os departamentos sem empregados.
 
+--15. Listar os empregados lotados nos departamentos localizados em “Fortaleza”.
+
+select e.enome
+from empregado e, departamento d, dunidade u
+where e.cdep = d.codigo and d.codigo = u.dcodigo and u.dcidade = 'Fortaleza'
+
 --17. Recuperar o nome dos empregados com salário entre R$ 700 e R$ 2800.
 
 select enome
