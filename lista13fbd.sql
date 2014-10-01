@@ -131,3 +131,15 @@ where e.cpf = d.gerente and e.enome like '% Silva%'
 
 --8. Recupere o nome dos gerentes que estão alocados em algum projeto (ou seja,
 --possuem “alguma” tarefa em “algum” projeto).
+
+select e.enome
+from empregado e, 
+	(
+	select cpf
+	from tarefa
+
+	INTERSECT
+
+	select gerente
+	from departamento) tab1
+where e.cpf = tab1.cpf
