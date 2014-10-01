@@ -252,3 +252,18 @@ having cast(salario as numeric) between 700 and 2800
 
 --18. Recuperar o nome dos departamentos que controlam projetos com mais de 50
 --empregados e que também controlam projetos com menos de 5 empregados.
+
+select d.dnome
+from departamento d,
+	(
+	select p.cdep, sum(tab1.qtd_empregado) as qtd_empregado
+	from projeto p, 
+		(	
+		select pcodigo, count(cpf) qtd_empregado
+		from tarefa
+		group by pcodigo ) tab1
+	where p.pcodigo = tab1.pcodigo
+	group by p.cdep ) tab2
+where d.codigo = tab2.cdep
+group by d.dnome, tab2.qtd_empregado
+having tab2.qtd_empregado <= 5 or tab2.qtd_empregado >=50
