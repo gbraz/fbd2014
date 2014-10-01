@@ -2,7 +2,7 @@
 --Aluno: Geraldo Braz Duarte Filho
 --Matrícula: 354063
 
---**1. Recuperar o nome do departamento com maior média salarial.
+--1. Recuperar o nome do departamento com maior média salarial.
 
 select d.dnome
 from departamento d, (
@@ -22,7 +22,7 @@ tab1.media_salario = (
 				where d.codigo = tab1.cdep) tab2
 			)
 
---**2. Recuperar para cada departamento: o seu nome, o maior e o menor salário recebido
+--2. Recuperar para cada departamento: o seu nome, o maior e o menor salário recebido
 --por empregados do departamento e a média salarial do departamento.
 
 select d.dnome, tab1.max_salario, tab1.min_salario, tab2.media_salario
@@ -52,7 +52,7 @@ from departamento d,
 	) tab2
 where tab1.cdep = tab2.codigo and d.codigo = tab1.cdep
 
---**3. Recuperar para cada departamento: o seu nome, o nome do seu gerente, a
+--3. Recuperar para cada departamento: o seu nome, o nome do seu gerente, a
 --quantidade de empregados, a quantidade de projetos do departamento e a
 --quantidade de unidades do departamento.
 
@@ -157,3 +157,28 @@ from empregado e,
 		from empregado) tab1
 	where t.pcodigo = p.pcodigo and tab1.cpf = t.cpf and tab1.cdep <> p.cdep) tab2
 where e.cpf = tab2.cpf
+
+--10. Recuperar o nome dos empregados que participam de todos os projetos.
+
+select e.enome
+from empregado e, 
+	(
+	select distinct cpf, pcodigo
+	from tarefa
+	group by cpf, pcodigo
+	having pcodigo = ALL (select pcodigo
+				from projeto
+				)
+	) tab1
+where e.cpf = tab1.cpf
+
+--11. Recuperar para cada funcionário (empregado): o seu nome, o seu salário e o nome
+--do seu departamento. O resultado deve estar em ordem decrescente de salário.
+--Mostrar os empregados sem departamento e os departamentos sem empregados.
+
+--17. Recuperar o nome dos empregados com salário entre R$ 700 e R$ 2800.
+
+select enome
+from empregado
+group by enome, salario
+having cast(salario as numeric) between 700 and 2800
